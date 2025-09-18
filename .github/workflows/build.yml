@@ -1,24 +1,26 @@
-name: Build SimpleTalk
+name: Build SimpleTalk (Linux .deb & Windows .exe)
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK
+
+      - name: Set up JDK 21 (Temurin)
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: '21'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Package Linux app (.deb)
+          java-version: 21
+
+      - name: Build JAR with Maven
+        run: mvn -B clean package --file pom.xml
+
+      - name: Package app for Linux (.deb)
         run: |
           mkdir input
           cp target/*-SNAPSHOT.jar input/app.jar
@@ -31,23 +33,29 @@ jobs:
             --app-version 1.0.0 \
             --vendor "Hemra Ashyrov Pvt." \
             --dest out
-      - uses: actions/upload-artifact@v3
+
+      - name: Upload Linux artifact (.deb)
+        uses: actions/upload-artifact@v3
         with:
-          name: linux-build
+          name: linux-deb
           path: out/*
 
   build-windows:
     runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK
+
+      - name: Set up JDK 21 (Temurin)
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: '21'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Package Windows app (.exe)
+          java-version: 21
+
+      - name: Build JAR with Maven
+        run: mvn -B clean package --file pom.xml
+
+      - name: Package app for Windows (.exe)
         run: |
           mkdir input
           copy target\*-SNAPSHOT.jar input\app.jar
@@ -61,36 +69,9 @@ jobs:
             --vendor "Hemra Ashyrov Pvt." ^
             --icon icon.ico ^
             --dest out
-      - uses: actions/upload-artifact@v3
-        with:
-          name: windows-build
-          path: out/*
 
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Upload Windows artifact (.exe)
+        uses: actions/upload-artifact@v3
         with:
-          distribution: temurin
-          java-version: '21'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Package MacOS app (.dmg)
-        run: |
-          mkdir input
-          cp target/*-SNAPSHOT.jar input/app.jar
-          jpackage \
-            --input input \
-            --name SimpleTalk \
-            --main-jar app.jar \
-            --main-class com.example.websocket_project.client.App \
-            --type dmg \
-            --app-version 1.0.0 \
-            --vendor "Hemra Ashyrov Pvt." \
-            --dest out
-      - uses: actions/upload-artifact@v3
-        with:
-          name: macos-build
+          name: windows-exe
           path: out/*
