@@ -60,16 +60,7 @@ jobs:
         run: |
           mkdir input
           copy target\*-SNAPSHOT.jar input\app.jar
-          jpackage ^
-            --input input ^
-            --name SimpleTalk ^
-            --main-jar app.jar ^
-            --main-class com.example.websocket_project.client.App ^
-            --type exe ^
-            --app-version 1.0.0 ^
-            --vendor "Hemra Ashyrov Pvt." ^
-            --icon icon.ico ^
-            --dest out
+          jpackage --input input --name SimpleTalk --main-jar app.jar --main-class com.example.websocket_project.client.App --type exe --app-version 1.0.0 --vendor "Hemra Ashyrov Pvt." --icon icon.ico --dest out
 
       - name: Upload Windows artifact (.exe)
         uses: actions/upload-artifact@v4
