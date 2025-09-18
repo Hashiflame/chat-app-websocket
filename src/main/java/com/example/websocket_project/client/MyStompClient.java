@@ -34,6 +34,7 @@ public class MyStompClient {
 //        String url = "ws://localhost:8080/ws";
 
         //deployment url
+
         String url = "https://chat-app-websocket-iyz5.onrender.com/ws";
         session = stompClient.connectAsync(url, sessionHandler).get();
     }
