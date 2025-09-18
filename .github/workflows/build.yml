@@ -2,7 +2,8 @@ name: Build SimpleTalk (Linux .deb & Windows .exe)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build-linux:
